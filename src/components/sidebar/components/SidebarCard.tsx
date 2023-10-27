@@ -56,27 +56,7 @@ export default function SidebarDocs() {
         >
           Go unlimited with PRO
         </Text>
-        <Text fontSize="14px" color={'white'} mb="14px" textAlign="center">
-          Get your AI Project to another level and start doing more with Horizon
-          AI Template PRO!
-        </Text>
       </Flex>
-      <Link href="https://horizon-ui.com/ai-template" isExternal>
-        <Button
-          bg="whiteAlpha.300"
-          _hover={{ bg: 'whiteAlpha.200' }}
-          _active={{ bg: 'whiteAlpha.100' }}
-          mb={{ sm: '16px', xl: '24px' }}
-          color={'white'}
-          fontWeight="regular"
-          fontSize="sm"
-          minW="185px"
-          mx="auto"
-          borderRadius="45px"
-        >
-          Get started with PRO
-        </Button>
-      </Link>
     </Flex>
   );
 }

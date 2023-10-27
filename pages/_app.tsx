@@ -49,7 +49,7 @@ function App({ Component, pageProps }: AppProps<{}>) {
               <Navbar
                 setApiKey={setApiKey}
                 onOpen={onOpen}
-                logoText={'Horizon UI Dashboard PRO'}
+                logoText={'Muvi UI'}
                 brandText={getActiveRoute(routes, pathname)}
                 secondary={getActiveNavbar(routes, pathname)}
               />
@@ -63,9 +63,6 @@ function App({ Component, pageProps }: AppProps<{}>) {
             pt="50px"
           >
             <Component apiKeyApp={apiKey} {...pageProps} />
-          </Box>
-          <Box>
-            <Footer />
           </Box>
         </Box>
       </Box>

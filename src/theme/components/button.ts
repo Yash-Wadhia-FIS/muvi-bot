@@ -48,28 +48,28 @@ export const buttonStyles = {
         }),
         primary: (props: any) => ({
           bg: mode(
-            'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
-            'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
+            'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
+            'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
           )(props),
           color: 'white',
           boxShadow: 'none',
           _focus: {
             bg: mode(
-              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
-              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
+              'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
+              'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
             )(props),
           },
           _active: {
             bg: mode(
-              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
-              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
+              'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
+              'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
             )(props),
           },
           _hover: {
             boxShadow: '0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
             bg: mode(
-              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
-              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
+              'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
+              'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
             )(props),
           },
         }),
@@ -247,33 +247,33 @@ export const buttonStyles = {
         }),
         primary: (props: any) => ({
           bg: mode(
-            'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
-            'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
+            'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
+            'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
           )(props),
           color: 'white',
           boxShadow: 'none',
           _focus: {
             bg: mode(
-              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
-              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
+              'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
+              'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
             )(props),
           },
           _active: {
             bg: mode(
-              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
-              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
+              'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
+              'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
             )(props),
           },
           _hover: {
             boxShadow: '0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
             bg: mode(
-              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
-              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
+              'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%) !important',
+              'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%) !important',
             )(props),
             _disabled: {
               bg: mode(
-                'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
-                'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
+                'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
+                'linear-gradient(15.46deg, #D90452 26.3%, #BF34B6 86.4%)',
               )(props),
             },
           },
