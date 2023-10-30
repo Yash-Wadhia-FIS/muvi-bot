@@ -1,6 +1,7 @@
 import { FC, useState, useRef, useEffect } from 'react';
 import { defaultMessages, defaultUserInfos, MessageModel, UserInfoModel, messageFromClient } from '../helpers';
 import { Box, Text, Flex, Avatar } from "@chakra-ui/react";
+import Carousel from "../components/carousel/Carousel"
 
 type Props = {
   isDrawer?: boolean;
@@ -9,7 +10,7 @@ type Props = {
 const bufferMessages = defaultMessages;
 
 const ChatInner: FC<Props> = ({ isDrawer = false }) => {
-    const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const [chatUpdateFlag, toggleChatUpdateFlat] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
@@ -71,13 +72,14 @@ const ChatInner: FC<Props> = ({ isDrawer = false }) => {
       );
     } else {
       // If it's plain text, set color to white
-      return <Box p={3} maxW="80%" color="white" bg={bgColor} 
-      borderRadius="lg">{text}</Box>;
+      return <Box p={3} maxW="80%" color="white" bg={bgColor}
+        borderRadius="lg">{text}</Box>;
     }
   };
 
   return (
     <Flex
+
       direction="column"
       p={4}
       id={isDrawer ? 'kt_drawer_chat_messenger_body' : 'kt_chat_messenger_body'}
@@ -103,33 +105,65 @@ const ChatInner: FC<Props> = ({ isDrawer = false }) => {
         {messages.map((message, index) => {
           const userInfo = userInfos[message.user];
           const bgColor = message.type === "in" ? `#BF0F70` : `#07C4D9`;
-          const contentClass = `${isDrawer ? "" : "d-flex"} justify-content-${
-            message.type === "in" ? "start" : "end"
-          } mb-10`;
+          const contentClass = `${isDrawer ? "" : "d-flex"} justify-content-${message.type === "in" ? "start" : "end"
+            } mb-10`;
 
           return (
+            // <Flex
+            //   key={`message${index}`}
+            //   direction={message.type === "in" ? "row" : "row-reverse"}
+            //   mb={4}
+            //   alignItems="flex-start"
+            // >
+            //   {/* <Avatar
+            //     src={toAbsoluteUrl(`/media/${userInfo.avatar}`)}
+            //     size="sm"
+            //     me={3}
+            //   /> */}
+            //   <Flex direction="column">
+            //     <Text color="gray.700" fontSize="sm">
+            //       {userInfo.name} • {message.time}
+            //     </Text>
+            //     {renderMessageText(message.text,
+            //        bgColor)}
+            //     <Carousel />
+            //   </Flex>
+            // </Flex>
             <Flex
+
               key={`message${index}`}
               direction={message.type === "in" ? "row" : "row-reverse"}
               mb={4}
               alignItems="flex-start"
             >
-              {/* <Avatar
-                src={toAbsoluteUrl(`/media/${userInfo.avatar}`)}
-                size="sm"
-                me={3}
-              /> */}
-              <Flex direction="column">
-                <Text color="gray.700" fontSize="sm">
-                  {userInfo.name} • {message.time}
-                </Text>
-                {renderMessageText(message.text, bgColor)}
-              </Flex>
+              {message.type === "in" ? (
+                // Code for receiver (message type is "in")
+                <Flex direction="column">
+                  <Text color="gray.700" fontSize="sm">
+                    {userInfo.name} • {message.time}
+                  </Text>
+                  {renderMessageText(message.text, bgColor)}
+                  <Box mt={2}>
+                  <Carousel />
+                  </Box>
+                </Flex>
+              ) : (
+                // Code for sender (message type is not "in")
+                <Flex direction="column">
+
+                  <Text color="gray.700" fontSize="sm">
+                    {userInfo.name} • {message.time}
+                  </Text>
+                  {renderMessageText(message.text, bgColor)}
+                  {/* Add Carousel for sender messages */}
+                </Flex>
+              )}
             </Flex>
+
           );
         })}
       </Box>
-      </Flex>
+    </Flex>
   );
 };
 
