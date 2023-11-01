@@ -1,231 +1,172 @@
-'use client'
-
-import React from 'react'
+import React, { useState } from "react";
 import {
+  Avatar,
   Box,
-  IconButton,
-  useBreakpointValue,
-  Stack,
-  Heading,
-  Text,
+  Button,
   Container,
-  Badge,
-  Flex
-} from '@chakra-ui/react'
-// Here we have used react-icons package for the icons
-import { BiLeftArrowAlt, BiRightArrowAlt } from 'react-icons/bi'
-// And react-slick as our Carousel Lib
-import Slider from 'react-slick'
-import { cards } from "../../utils/data/data"
-// import {cardType} from "../../utils/data/data"
+  Flex,
+  Heading,
+  Stack,
+  Text,
+  VStack,
+  Image,
+  ModalOverlay,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  AspectRatio,
+  Center
+} from "@chakra-ui/react";
+import {
+  Carousel as ChakraCarousel,
+  CarouselItem,
+  useCarouselItem,
+  CarouselItems,
+  useCarousel,
+} from "chakra-framer-carousel";
+import { ChevronLeft, ChevronRight } from "react-feather";
+import { movieData } from "../../utils/data/data";
+import Link from 'next/link';
 
-// Settings for the slider
-const settings = {
-  dots: true,
-  arrows: false,
-  fade: true,
-  infinite: true,
-  autoplay: true,
-  speed: 500,
-  autoplaySpeed: 5000,
-  slidesToShow: 1,
-  slidesToScroll: 1,
+const TestimonialHeading: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <Heading as={"h4"} fontSize={"sm"}>
+
+      {children}
+    </Heading>
+  );
 }
 
+function Movie({
+  bg,
+  title,
+  img,
+  id,
+  videoSrc,
+}: {
+  id?: string;
+  bg?: string;
+  title?: string;
+  img: string;
+  videoSrc: string;
+}) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
-export default function CaptionCarousel() {
-  // As we have used custom buttons, we need a reference variable to
-  // change the state
-  const [slider, setSlider] = React.useState<Slider | null>(null)
-
-  // These are the breakpoints which changes the position of the
-  // buttons as the screen size changes
-  const top = useBreakpointValue({ base: '90%', md: '50%' })
-  const side = useBreakpointValue({ base: '30%', md: '40px' })
-
-  // This list contains all the data for carousels
-  // This can be static or loaded from a server
-
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
-    // <Box position={'relative'} height={'100px'} width={'180px'} overflow={'hidden'}>
-    //   {/* CSS files for react-slick */}
-    //   <link
-    //     rel="stylesheet"
-    //     type="text/css"
-    //     href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
-    //   />
-    //   <link
-    //     rel="stylesheet"
-    //     type="text/css"
-    //     href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
-    //   />
-    //   {/* Left Icon */}
-    //   <IconButton
-    //     aria-label="left-arrow"
-    //     variant="ghost"
-    //     position="absolute"
-    //     left={side}
-    //     top={top}
-    //     transform={'translate(0%, -50%)'}
-    //     zIndex={2}
-    //     onClick={() => slider?.slickPrev()}
-    //   >
-    //     <BiLeftArrowAlt size="15px" />
-    //   </IconButton>
+    <Flex
+      w="220px"
+      h="100px"
+      pos="relative"
+      boxShadow="lg"
+      align="center"
+      as="button"
+      onClick={openModal}
+      bg={bg}
+      rounded="xl"
+      justify="center"
+    >
+      <VStack spacing={2}>
+        <Box mt="1.5" mb="1.5">
+          <Image
+            src={img}
+            alt="image"
+            boxSize="100px"
+            objectFit="cover"
+            onClick={openModal}
+          />
+        </Box>
+        {title && (
+          <Text fontSize="sm" textAlign="center">
+            <Link href={`movieCard/${id}`}>{title}</Link>
+          </Text>
+        )}
 
-    //   {/* Right Icon */}
-    //   <IconButton
-    //     aria-label="right-arrow"
-    //     variant="ghost"
-    //     position="absolute"
-    //     right={side}
-    //     top={top}
-    //     transform={'translate(0%, -50%)'}
-    //     zIndex={2}
-    //     onClick={() => slider?.slickNext()}>
-    //     <BiRightArrowAlt size="15px" />
-    //   </IconButton>
-    //   {/* Slider */}
-    //   <Slider {...settings} ref={(slider) => setSlider(slider)}>
-    //     {cards.map((card, index) => (
-
-    //       <Box
-    //         key={index}
-    //         height={'100px'}
-    //         width={'190px'}
-    //         position="relative"
-    //         backgroundPosition="center"
-    //         backgroundRepeat="no-repeat"
-    //         backgroundSize="cover"
-    //         borderRadius="8px"
-    //         backgroundImage={`url(${card?.image})`}>
-    //         <Badge
-
-    //           bg="blue.500"
-    //           color="white"
-    //           borderRadius="full"
-    //           top="5px"
-    //           right="5px"
-    //           position="absolute"
-    //           // transform="translate(0%, -30%)" // This will center the badge at the top-right
-    //           // fontSize="xs" // Adjust the font size as needed
-    //           // p={1}
-    //         >
-    //           {card?.image.length}
-    //         </Badge>
-    //         {/* This is the block you need to change, to customize the caption */}
-    //         <Container size="container.lg"  position="relative">
-
-    //           <Stack
-    //             spacing={6}
-    //             w={'full'}
-    //             maxW={'lg'}
-    //             position="absolute"
-    //             top="50%"
-    //             transform="translate(0, -50%)">
-    //             <Heading fontSize={{ base: '3xl', md: '4xl', lg: '5xl' }}>
-    //               {/* {card.title} */}
-    //             </Heading>
-    //             <Text fontSize={{ base: 'md', lg: 'lg' }} color="GrayText">
-    //               {/* {card.text} */}
-    //             </Text>
-    //           </Stack>
-
-    //         </Container>
-        
-    //       </Box>
-    //     ))}
-    //   </Slider>
-    // </Box>
-    <Box position={'relative'} height={'100px'} width={'180px'} overflow={'hidden'}>
-  {/* CSS files for react-slick */}
-  <link
-    rel="stylesheet"
-    type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
-  />
-  <link
-    rel="stylesheet"
-    type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
-  />
-  {/* Left Icon */}
-  <IconButton
-    aria-label="left-arrow"
-    variant="ghost"
-    position="absolute"
-    left={side}
-    top={top}
-    transform={'translate(0%, -50%)'}
-    zIndex={2}
-    onClick={() => slider?.slickPrev()}
-  >
-    <BiLeftArrowAlt size="15px" />
-  </IconButton>
-
-  {/* Right Icon */}
-  <IconButton
-    aria-label="right-arrow"
-    variant="ghost"
-    position="absolute"
-    right={side}
-    top={top}
-    transform={'translate(0%, -50%)'}
-    zIndex={2}
-    onClick={() => slider?.slickNext()}
-  >
-    <BiRightArrowAlt size="15px" />
-  </IconButton>
-  {/* Slider */}
-  <Slider {...settings} ref={(slider) => setSlider(slider)}>
-    {cards.map((card, index) => (
-      <Box
-        key={index}
-        height={'100px'}
-        width={'190px'}
-        position="relative"
-        backgroundPosition="center"
-        backgroundRepeat="no-repeat"
-        backgroundSize="cover"
-        borderRadius="8px"
-        backgroundImage={`url(${card?.image})`}
-      >
-        <Badge
-          bg="blue.500"
-          color="white"
-          borderRadius="full"
-          top="5px"
-          right="5px"
-          position="absolute"
-          fontSize="xs"
-          padding="2px 8px"  // Adjust padding to fit the notification style
-        >
-          {card?.image.length}
-        </Badge>
-        {/* This is the block you need to change, to customize the caption */}
-        <Container size="container.lg" position="relative">
-          <Stack
-            spacing={6}
-            w={'full'}
-            maxW={'lg'}
-            position="absolute"
-            top="50%"
-            transform="translate(0, -50%)"
-          >
-            <Heading fontSize={{ base: '3xl', md: '4xl', lg: '5xl' }}>
-              {/* {card.title} */}
-            </Heading>
-            <Text fontSize={{ base: 'md', lg: 'lg' }} color="GrayText">
-              {/* {card.text} */}
-            </Text>
-          </Stack>
-        </Container>
-      </Box>
-    ))}
-  </Slider>
-</Box>
-
-  )
+        {isModalOpen && (
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader> {title}</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <AspectRatio maxW="500px" m={"2"} ratio={1}>
+                  <iframe
+                    title={title}
+                    src={"https://www.youtube.com/embed/QhBnZ6NPOY"}
+                    allowFullScreen
+                  />
+                </AspectRatio>
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+        )}
+      </VStack>
+    </Flex>
+  );
 }
+
+function Arrow({ isLeft }: { isLeft: boolean }) {
+  const { onNext, onPrevious } = useCarousel();
+  const onClickHandler = () => {
+    if (isLeft) {
+      onPrevious();
+    } else {
+      onNext();
+    }
+  };
+  const pos = isLeft ? { left: "10px" } : { right: "10px" };
+
+  return (
+    <Flex pos="absolute" {...pos} top="35%">
+      <Button size="sm" variant="solid" onClick={onClickHandler}>
+        {isLeft ? <ChevronLeft /> : <ChevronRight />}
+      </Button>
+    </Flex>
+  );
+}
+
+function MovieDemo() {
+  return (
+    <Flex flexDir="column">
+      <ChakraCarousel>
+        <Flex w="fit-content" pos="relative">
+          <CarouselItems mx={2}>
+            {movieData.map(({ title, img, id, videoSrc }, index) => {
+              return (
+                <CarouselItem index={index} key={title}>
+                  <Box>
+                    <Movie title={title} img={img} id={id} videoSrc={videoSrc} />
+                  </Box>
+                </CarouselItem>
+              );
+            })}
+          </CarouselItems>
+          <Arrow isLeft />
+          <Arrow isLeft={false} />
+        </Flex>
+      </ChakraCarousel>
+    </Flex>
+  );
+}
+
+function Carousel() {
+  return (
+    <Box h="120" w="200" bg="gray.50" borderRadius={8} overflow={"hidden"}>
+      <Container>
+        
+        <MovieDemo />
+      </Container>
+    </Box>
+  );
+}
+
+export default Carousel;

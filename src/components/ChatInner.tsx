@@ -3,6 +3,7 @@ import { defaultMessages, defaultUserInfos, MessageModel, UserInfoModel, message
 import { Box, Text, Flex, Avatar } from "@chakra-ui/react";
 import Carousel from "../components/carousel/Carousel"
 
+
 type Props = {
   isDrawer?: boolean;
 };
@@ -16,6 +17,7 @@ const ChatInner: FC<Props> = ({ isDrawer = false }) => {
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<MessageModel[]>(bufferMessages);
   const [userInfos] = useState<UserInfoModel[]>(defaultUserInfos);
+
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
@@ -79,7 +81,6 @@ const ChatInner: FC<Props> = ({ isDrawer = false }) => {
 
   return (
     <Flex
-
       direction="column"
       p={4}
       id={isDrawer ? 'kt_drawer_chat_messenger_body' : 'kt_chat_messenger_body'}
@@ -109,28 +110,9 @@ const ChatInner: FC<Props> = ({ isDrawer = false }) => {
             } mb-10`;
 
           return (
-            // <Flex
-            //   key={`message${index}`}
-            //   direction={message.type === "in" ? "row" : "row-reverse"}
-            //   mb={4}
-            //   alignItems="flex-start"
-            // >
-            //   {/* <Avatar
-            //     src={toAbsoluteUrl(`/media/${userInfo.avatar}`)}
-            //     size="sm"
-            //     me={3}
-            //   /> */}
-            //   <Flex direction="column">
-            //     <Text color="gray.700" fontSize="sm">
-            //       {userInfo.name} • {message.time}
-            //     </Text>
-            //     {renderMessageText(message.text,
-            //        bgColor)}
-            //     <Carousel />
-            //   </Flex>
-            // </Flex>
+    
             <Flex
-
+            
               key={`message${index}`}
               direction={message.type === "in" ? "row" : "row-reverse"}
               mb={4}
@@ -144,7 +126,7 @@ const ChatInner: FC<Props> = ({ isDrawer = false }) => {
                   </Text>
                   {renderMessageText(message.text, bgColor)}
                   <Box mt={2}>
-                  <Carousel />
+                    <Carousel />
                   </Box>
                 </Flex>
               ) : (

@@ -54,6 +54,7 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean }) {
     <>
       {sidebar ? (
         <Button
+        
           onClick={onOpen}
           display="flex"
           variant="api"

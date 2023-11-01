@@ -13,7 +13,7 @@ const nextConfig = {
     ],
     // Make ENV
     unoptimized: true,
-  },
+  }, 
 };
 
 module.exports = nextConfig;

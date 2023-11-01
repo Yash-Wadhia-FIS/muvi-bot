@@ -5,6 +5,7 @@ import { ChatInner } from '@/components/ChatInner';
 import Link from '@/components/link/Link';
 import MessageBoxChat from '@/components/MessageBox';
 import { ChatBody, OpenAIModel } from '@/types/types';
+import axios from "axios"
 import {
   Accordion,
   AccordionButton,
@@ -59,80 +60,80 @@ export default function Chat(props: { apiKeyApp: string }) {
     { color: 'gray.500' },
     { color: 'whiteAlpha.600' },
   );
-  const handleTranslate = async () => {
-    const apiKey = apiKeyApp;
-    setInputOnSubmit(inputCode);
+  // const handleTranslate = async () => {
+  //   const apiKey = apiKeyApp;
+  //   setInputOnSubmit(inputCode);
 
-    // Chat post conditions(maximum number of characters, valid message etc.)
-    const maxCodeLength = model === 'gpt-3.5-turbo' ? 700 : 700;
+  //   // Chat post conditions(maximum number of characters, valid message etc.)
+  //   const maxCodeLength = model === 'gpt-3.5-turbo' ? 700 : 700;
 
-    if (!apiKeyApp?.includes('sk-') && !apiKey?.includes('sk-')) {
-      alert('Please enter an API key.');
-      return;
-    }
+  //   if (!apiKeyApp?.includes('sk-') && !apiKey?.includes('sk-')) {
+  //     alert('Please enter an API key.');
+  //     return;
+  //   }
 
-    if (!inputCode) {
-      alert('Please enter your message.');
-      return;
-    }
+  //   if (!inputCode) {
+  //     alert('Please enter your message.');
+  //     return;
+  //   }
 
-    if (inputCode.length > maxCodeLength) {
-      alert(
-        `Please enter code less than ${maxCodeLength} characters. You are currently at ${inputCode.length} characters.`,
-      );
-      return;
-    }
-    setOutputCode(' ');
-    setLoading(true);
-    const controller = new AbortController();
-    const body: ChatBody = {
-      inputCode,
-      model,
-      apiKey,
-    };
+  //   if (inputCode.length > maxCodeLength) {
+  //     alert(
+  //       `Please enter code less than ${maxCodeLength} characters. You are currently at ${inputCode.length} characters.`,
+  //     );
+  //     return;
+  //   }
+  //   setOutputCode(' ');
+  //   setLoading(true);
+  //   const controller = new AbortController();
+  //   const body: ChatBody = {
+  //     inputCode,
+  //     model,
+  //     apiKey,
+  //   };
 
-    // -------------- Fetch --------------
-    const response = await fetch('/api/chatAPI', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      signal: controller.signal,
-      body: JSON.stringify(body),
-    });
+  //   // --------------fetch--------------
+  //   const response = await fetch('/api/chatAPI', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     signal: controller.signal,
+  //     body: JSON.stringify(body),
+  //   });
 
-    if (!response.ok) {
-      setLoading(false);
-      if (response) {
-        alert(
-          'Something went wrong went fetching from the API. Make sure to use a valid API key.',
-        );
-      }
-      return;
-    }
+  //   if (!response.ok) {
+  //     setLoading(false);
+  //     if (response) {
+  //       alert(
+  //         'Something went wrong went fetching from the API. Make sure to use a valid API key.',
+  //       );
+  //     }
+  //     return;
+  //   }
 
-    const data = response.body;
+  //   const data = response.body;
 
-    if (!data) {
-      setLoading(false);
-      alert('Something went wrong');
-      return;
-    }
+  //   if (!data) {
+  //     setLoading(false);
+  //     alert('Something went wrong');
+  //     return;
+  //   }
 
-    const reader = data.getReader();
-    const decoder = new TextDecoder();
-    let done = false;
+  //   const reader = data.getReader();
+  //   const decoder = new TextDecoder();
+  //   let done = false;
 
-    while (!done) {
-      setLoading(true);
-      const { value, done: doneReading } = await reader.read();
-      done = doneReading;
-      const chunkValue = decoder.decode(value);
-      setOutputCode((prevCode) => prevCode + chunkValue);
-    }
+  //   while (!done) {
+  //     setLoading(true);
+  //     const { value, done: doneReading } = await reader.read();
+  //     done = doneReading;
+  //     const chunkValue = decoder.decode(value);
+  //     setOutputCode((prevCode) => prevCode + chunkValue);
+  //   }
 
-    setLoading(false);
-  };
+  //   setLoading(false);
+  // };
   // -------------- Copy Response --------------
   // const copyToClipboard = (text: string) => {
   //   const el = document.createElement('textarea');
@@ -152,6 +153,75 @@ export default function Chat(props: { apiKeyApp: string }) {
   // }
   // }, [])
 
+
+  const apidata = 'https://us-central1-ai-lab-280706.cloudfunctions.net/muvi-cinema';
+
+  const requestData = {
+    project_id: 'ai-lab-280706',
+    location_id: 'global',
+    agent_id: '8e6ff9bb-17c5-4635-ab96-c4a3967df795',
+    language_code: 'English - en',
+    text: 'good hindi action movie',
+  };
+
+  // Function to make the POST request
+  const makePostRequest = async () => {
+    try {
+      const apiUrl = apidata;
+
+      // Set up CORS headers for the request
+      const config = {
+        headers: {
+          'Access-Control-Allow-Origin': 'http://localhost:3000',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+          'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
+        },
+      };
+
+      // Make the POST request with Axios and the CORS headers
+      const response = await axios.post(apiUrl, requestData, config);
+
+      // Assuming the response contains the data you need
+      const responseData = response.data;
+      console.log('Response data:', responseData);
+
+      // Update state with the response data (you need to define your state management here)
+    } catch (error) {
+      // Handle any errors that occur during the request
+      console.error('Request error:', error);
+    }
+  };
+
+
+  // const apidata = 'https://us-central1-ai-lab-280706.cloudfunctions.net/muvi-cinema';
+
+  // const requestData = {
+  //   project_id: 'ai-lab-280706',
+  //   location_id: 'global',
+  //   agent_id: '8e6ff9bb-17c5-4635-ab96-c4a3967df795',
+  //   language_code: 'English - en',
+  //   text: 'good hindi action movie',
+  // };
+
+  // // Function to make the POST request
+  // const makePostRequest = async () => {
+  //   try {
+  //     const apiUrl = apidata;
+
+  //     // Make the POST request with Axios
+  //     const response = await axios.post(apiUrl, requestData);
+
+  //     // Assuming the response contains the data you need
+  //     const responseData = response.data;
+  //     console.log('Response data:', responseData);
+
+  //     // Update state with the response data (you need to define your state management here)
+  //   } catch (error) {
+  //     // Handle any errors that occur during the request
+  //     console.error('Request error:', error);
+  //   }
+  // };
+
   const handleChange = (Event: any) => {
     setInputCode(Event.target.value);
   };
@@ -164,6 +234,7 @@ export default function Chat(props: { apiKeyApp: string }) {
       position="relative"
     >
       <Flex
+
         direction="column"
         mx="auto"
         w={{ base: '100%', md: '100%', xl: '100%' }}
@@ -172,7 +243,7 @@ export default function Chat(props: { apiKeyApp: string }) {
       >
         {/* Model Change */}
         <Flex direction={'column'} w="100%" mb={outputCode ? '20px' : 'auto'}>
-          <ChatInner />    
+          <ChatInner />
         </Flex>
         {/* Main Box */}
         <Flex
@@ -184,6 +255,7 @@ export default function Chat(props: { apiKeyApp: string }) {
         >
           <Flex w="100%" align={'center'} mb="10px">
             <Flex
+
               borderRadius="full"
               justify="center"
               align="center"
@@ -194,6 +266,7 @@ export default function Chat(props: { apiKeyApp: string }) {
               h="40px"
               minH="40px"
               minW="40px"
+
             >
               <Icon
                 as={MdPerson}
@@ -289,7 +362,7 @@ export default function Chat(props: { apiKeyApp: string }) {
                 bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
               },
             }}
-            onClick={handleTranslate}
+            onClick={makePostRequest}
             isLoading={loading ? true : false}
           >
             Submit
@@ -297,6 +370,7 @@ export default function Chat(props: { apiKeyApp: string }) {
         </Flex>
 
         <Flex
+
           justify="center"
           mt="20px"
           direction={{ base: 'column', md: 'row' }}
