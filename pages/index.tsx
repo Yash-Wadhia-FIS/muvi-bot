@@ -2,17 +2,9 @@
 import { ChatInner } from '@/components/ChatInner';
 /*eslint-disable*/
 
-import Link from '@/components/link/Link';
 import MessageBoxChat from '@/components/MessageBox';
 import { ChatBody, OpenAIModel } from '@/types/types';
-import axios from "axios"
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Box,
   Button,
   Flex,
   Icon,
@@ -24,9 +16,11 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson } from 'react-icons/md';
+import { v4 as uuidv4 } from 'uuid';
+
 import Bg from '../public/img/chat/bg-image.png';
 
-export default function Chat(props: { apiKeyApp: string }) {
+export default function Chat(props: { apiKeyApp: any; }) {
   // *** If you use .env.local variable for your API key, method which we recommend, use the apiKey variable commented below
   const { apiKeyApp } = props;
   // Input States
@@ -38,6 +32,12 @@ export default function Chat(props: { apiKeyApp: string }) {
   const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
   // Loading state
   const [loading, setLoading] = useState<boolean>(false);
+  //message
+  const [message, setMessage] = useState<Array<any>>([]);
+  //disable button
+  const [disable, setDisable] = useState<boolean>(false);
+  //session id
+  const [sessionId, setSessionId] = useState<string>('');
 
   // API Key
   // const [apiKey, setApiKey] = useState<string>(apiKeyApp);
@@ -60,171 +60,59 @@ export default function Chat(props: { apiKeyApp: string }) {
     { color: 'gray.500' },
     { color: 'whiteAlpha.600' },
   );
-  // const handleTranslate = async () => {
-  //   const apiKey = apiKeyApp;
-  //   setInputOnSubmit(inputCode);
 
-  //   // Chat post conditions(maximum number of characters, valid message etc.)
-  //   const maxCodeLength = model === 'gpt-3.5-turbo' ? 700 : 700;
-
-  //   if (!apiKeyApp?.includes('sk-') && !apiKey?.includes('sk-')) {
-  //     alert('Please enter an API key.');
-  //     return;
-  //   }
-
-  //   if (!inputCode) {
-  //     alert('Please enter your message.');
-  //     return;
-  //   }
-
-  //   if (inputCode.length > maxCodeLength) {
-  //     alert(
-  //       `Please enter code less than ${maxCodeLength} characters. You are currently at ${inputCode.length} characters.`,
-  //     );
-  //     return;
-  //   }
-  //   setOutputCode(' ');
-  //   setLoading(true);
-  //   const controller = new AbortController();
-  //   const body: ChatBody = {
-  //     inputCode,
-  //     model,
-  //     apiKey,
-  //   };
-
-  //   // --------------fetch--------------
-  //   const response = await fetch('/api/chatAPI', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     signal: controller.signal,
-  //     body: JSON.stringify(body),
-  //   });
-
-  //   if (!response.ok) {
-  //     setLoading(false);
-  //     if (response) {
-  //       alert(
-  //         'Something went wrong went fetching from the API. Make sure to use a valid API key.',
-  //       );
-  //     }
-  //     return;
-  //   }
-
-  //   const data = response.body;
-
-  //   if (!data) {
-  //     setLoading(false);
-  //     alert('Something went wrong');
-  //     return;
-  //   }
-
-  //   const reader = data.getReader();
-  //   const decoder = new TextDecoder();
-  //   let done = false;
-
-  //   while (!done) {
-  //     setLoading(true);
-  //     const { value, done: doneReading } = await reader.read();
-  //     done = doneReading;
-  //     const chunkValue = decoder.decode(value);
-  //     setOutputCode((prevCode) => prevCode + chunkValue);
-  //   }
-
-  //   setLoading(false);
-  // };
-  // -------------- Copy Response --------------
-  // const copyToClipboard = (text: string) => {
-  //   const el = document.createElement('textarea');
-  //   el.value = text;
-  //   document.body.appendChild(el);
-  //   el.select();
-  //   document.execCommand('copy');
-  //   document.body.removeChild(el);
-  // };
-
-  // *** Initializing apiKey with .env.local value
-  // useEffect(() => {
-  // ENV file verison
-  // const apiKeyENV = process.env.NEXT_PUBLIC_OPENAI_API_KEY
-  // if (apiKey === undefined || null) {
-  //   setApiKey(apiKeyENV)
-  // }
-  // }, [])
-
-
-  const apidata = 'https://us-central1-ai-lab-280706.cloudfunctions.net/muvi-cinema';
-
-  const requestData = {
-    project_id: 'ai-lab-280706',
-    location_id: 'global',
-    agent_id: '8e6ff9bb-17c5-4635-ab96-c4a3967df795',
-    language_code: 'English - en',
-    text: 'good hindi action movie',
-  };
-
+  useEffect(() => {
+    setSessionId(uuidv4());
+  }, [])
+  
   // Function to make the POST request
   const makePostRequest = async () => {
-    try {
-      const apiUrl = apidata;
+    const _message = [...message];
+    var raw = JSON.stringify({
+      "text": inputCode,
+      "session_id": sessionId,
+    });
 
-      // Set up CORS headers for the request
-      const config = {
-        headers: {
-          'Access-Control-Allow-Origin': 'http://localhost:3000',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-          'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
-        },
-      };
-
-      // Make the POST request with Axios and the CORS headers
-      const response = await axios.post(apiUrl, requestData, config);
-
-      // Assuming the response contains the data you need
-      const responseData = response.data;
-      console.log('Response data:', responseData);
-
-      // Update state with the response data (you need to define your state management here)
-    } catch (error) {
-      // Handle any errors that occur during the request
-      console.error('Request error:', error);
+    const headers = {
+      'Content-Type': 'application/json',
     }
-  };
+    
+    var requestOptions = {
+      method: 'POST',
+      headers,
+      body: raw,
+      redirect: 'follow'
+    };
+    
+    _message.push({
+      result: {
+        response: inputCode
+      }
+    });
+    setMessage(_message);
+    setDisable(true);
+    setInputCode('');
 
-
-  // const apidata = 'https://us-central1-ai-lab-280706.cloudfunctions.net/muvi-cinema';
-
-  // const requestData = {
-  //   project_id: 'ai-lab-280706',
-  //   location_id: 'global',
-  //   agent_id: '8e6ff9bb-17c5-4635-ab96-c4a3967df795',
-  //   language_code: 'English - en',
-  //   text: 'good hindi action movie',
-  // };
-
-  // // Function to make the POST request
-  // const makePostRequest = async () => {
-  //   try {
-  //     const apiUrl = apidata;
-
-  //     // Make the POST request with Axios
-  //     const response = await axios.post(apiUrl, requestData);
-
-  //     // Assuming the response contains the data you need
-  //     const responseData = response.data;
-  //     console.log('Response data:', responseData);
-
-  //     // Update state with the response data (you need to define your state management here)
-  //   } catch (error) {
-  //     // Handle any errors that occur during the request
-  //     console.error('Request error:', error);
-  //   }
-  // };
+    fetch("https://dapper-elated-gemini.glitch.me/chat", {
+      method: 'POST',
+      headers,
+      body: raw,
+      redirect: 'follow',
+    })
+      .then(response => response.json())
+      .then(result => {
+        _message.push(result);
+        setMessage(_message);
+        setDisable(false);
+      })
+      .catch(error => console.log('error', error));
+  }
 
   const handleChange = (Event: any) => {
     setInputCode(Event.target.value);
   };
+
+  console.log('messages', message);
 
   return (
     <Flex
@@ -243,7 +131,7 @@ export default function Chat(props: { apiKeyApp: string }) {
       >
         {/* Model Change */}
         <Flex direction={'column'} w="100%" mb={outputCode ? '20px' : 'auto'}>
-          <ChatInner />
+          <ChatInner innerMessages={message} />
         </Flex>
         {/* Main Box */}
         <Flex
@@ -342,6 +230,7 @@ export default function Chat(props: { apiKeyApp: string }) {
             color={inputColor}
             _placeholder={placeholderColor}
             placeholder="Type your message here..."
+            value={inputCode}
             onChange={handleChange}
           />
           <Button
@@ -364,6 +253,7 @@ export default function Chat(props: { apiKeyApp: string }) {
             }}
             onClick={makePostRequest}
             isLoading={loading ? true : false}
+            disabled={disable}
           >
             Submit
           </Button>

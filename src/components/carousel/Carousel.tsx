@@ -27,7 +27,6 @@ import {
   useCarousel,
 } from "chakra-framer-carousel";
 import { ChevronLeft, ChevronRight } from "react-feather";
-import { movieData } from "../../utils/data/data";
 import Link from 'next/link';
 
 const TestimonialHeading: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -46,7 +45,7 @@ function Movie({
   id,
   videoSrc,
 }: {
-  id?: string;
+  id?: string | null;
   bg?: string;
   title?: string;
   img: string;
@@ -61,6 +60,8 @@ function Movie({
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  console.log('video src', videoSrc);
 
   return (
     <Flex
@@ -85,23 +86,16 @@ function Movie({
             onClick={openModal}
           />
         </Box>
-        {title && (
-          <Text fontSize="sm" textAlign="center">
-            <Link href={`movieCard/${id}`}>{title}</Link>
-          </Text>
-        )}
 
         {isModalOpen && (
           <Modal isOpen={isModalOpen} onClose={closeModal}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader> {title}</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 <AspectRatio maxW="500px" m={"2"} ratio={1}>
                   <iframe
-                    title={title}
-                    src={"https://www.youtube.com/embed/QhBnZ6NPOY"}
+                    src={videoSrc}
                     allowFullScreen
                   />
                 </AspectRatio>
@@ -134,17 +128,29 @@ function Arrow({ isLeft }: { isLeft: boolean }) {
   );
 }
 
-function MovieDemo() {
+const extractVideoId = (link: string) => {
+  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = link.match(regex);
+  return match && match[1];
+};
+
+function MovieDemo({links} : {links: Array<string>}) {
+
   return (
     <Flex flexDir="column">
       <ChakraCarousel>
         <Flex w="fit-content" pos="relative">
           <CarouselItems mx={2}>
-            {movieData.map(({ title, img, id, videoSrc }, index) => {
+            {links.map((link, index) => {
+              const videoId = extractVideoId(link);
+              let thumbnailUrl: string = '';
+              if (videoId) {
+                thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+              }
               return (
-                <CarouselItem index={index} key={title}>
+                <CarouselItem index={index} key={videoId}>
                   <Box>
-                    <Movie title={title} img={img} id={id} videoSrc={videoSrc} />
+                    <Movie img={thumbnailUrl} id={videoId} videoSrc={link} />
                   </Box>
                 </CarouselItem>
               );
@@ -158,12 +164,11 @@ function MovieDemo() {
   );
 }
 
-function Carousel() {
+function Carousel({links} : {links: Array<string>}) {
   return (
     <Box h="120" w="200" bg="gray.50" borderRadius={8} overflow={"hidden"}>
       <Container>
-        
-        <MovieDemo />
+        <MovieDemo links={links} />
       </Container>
     </Box>
   );

@@ -6,17 +6,19 @@ import Carousel from "../components/carousel/Carousel"
 
 type Props = {
   isDrawer?: boolean;
+  innerMessages: Array<any>;
 };
 
 const bufferMessages = defaultMessages;
 
-const ChatInner: FC<Props> = ({ isDrawer = false }) => {
+const ChatInner: FC<Props> = ({ isDrawer = false, innerMessages = [] }) => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const [chatUpdateFlag, toggleChatUpdateFlat] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
-  const [messages, setMessages] = useState<MessageModel[]>(bufferMessages);
+  const [messages, setMessages] = useState<any>(innerMessages);
   const [userInfos] = useState<UserInfoModel[]>(defaultUserInfos);
+  const [youtubeLinks, setYoutubeLinks] = useState<Array<any>>([]);
 
 
   const scrollToBottom = () => {
@@ -27,7 +29,17 @@ const ChatInner: FC<Props> = ({ isDrawer = false }) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+    setMessages(innerMessages);
+    // Extract YouTube links and set the state
+    const links = innerMessages.reduce((acc, message) => {
+      const extractedLinks = extractYouTubeLinks(message.result?.response || '');
+      return [...acc, ...extractedLinks];
+    }, [] as string[]);
+
+    setYoutubeLinks(links);
+  }, [messages, innerMessages]);
+
+  console.log('youtue links', youtubeLinks);
 
   const sendMessage = () => {
     const newMessage: MessageModel = {
@@ -55,22 +67,27 @@ const ChatInner: FC<Props> = ({ isDrawer = false }) => {
     }
   };
 
+  const extractYouTubeLinks = (text: string) => {
+    const youtubeRegex = /(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/\S+/g;
+    return text.match(youtubeRegex) || [];
+  };
+
   const renderMessageText = (text: string, bgColor: string) => {
-    const linkRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1>/gi;
-    const isLink = linkRegex.test(text);
+    const youtubeRegex = /(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/.+/;
+    const isLink = youtubeRegex.test(text);
+    const links = extractYouTubeLinks(text);
+    console.log('links', links)
 
     if (isLink) {
       // If the message contains a link, set link color to blue and rest of the text to white
       return (
-        <Box
-          p={3}
-          borderRadius="lg"
-          bg={bgColor}
-          fontWeight="bold"
-          maxW="80%"
-          dangerouslySetInnerHTML={{ __html: text }}
-          color="blue.100"
-        />
+        <>
+          <Box p={3} maxW="80%" color="white" bg={bgColor}
+            borderRadius="lg">{text}</Box>
+          <Box mt={2}>
+            <Carousel links={links} />
+          </Box>
+        </>
       );
     } else {
       // If it's plain text, set color to white
@@ -103,16 +120,15 @@ const ChatInner: FC<Props> = ({ isDrawer = false }) => {
           },
         }}
       >
-        {messages.map((message, index) => {
+        {messages?.map((message: any, index: number) => {
           const userInfo = userInfos[message.user];
           const bgColor = message.type === "in" ? `#BF0F70` : `#07C4D9`;
           const contentClass = `${isDrawer ? "" : "d-flex"} justify-content-${message.type === "in" ? "start" : "end"
             } mb-10`;
 
           return (
-    
+
             <Flex
-            
               key={`message${index}`}
               direction={message.type === "in" ? "row" : "row-reverse"}
               mb={4}
@@ -122,21 +138,18 @@ const ChatInner: FC<Props> = ({ isDrawer = false }) => {
                 // Code for receiver (message type is "in")
                 <Flex direction="column">
                   <Text color="gray.700" fontSize="sm">
-                    {userInfo.name} • {message.time}
+                    Bot
                   </Text>
-                  {renderMessageText(message.text, bgColor)}
-                  <Box mt={2}>
-                    <Carousel />
-                  </Box>
+                  {renderMessageText(message.result?.response, bgColor)}
                 </Flex>
               ) : (
                 // Code for sender (message type is not "in")
                 <Flex direction="column">
 
                   <Text color="gray.700" fontSize="sm">
-                    {userInfo.name} • {message.time}
+                    User
                   </Text>
-                  {renderMessageText(message.text, bgColor)}
+                  {renderMessageText(message.result?.response, bgColor)}
                   {/* Add Carousel for sender messages */}
                 </Flex>
               )}
