@@ -29,7 +29,7 @@ function App({ Component, pageProps }: AppProps<{}>) {
       <Box>
         <Sidebar setApiKey={setApiKey} routes={routes} />
         <Box
-          pt={{ base: '60px', md: '100px' }}
+          // pt={{ base: '60px', md: '100px' }}
           float="right"
           minHeight="100vh"
           height="100%"
@@ -45,13 +45,13 @@ function App({ Component, pageProps }: AppProps<{}>) {
         >
           <Portal>
             <Box>
-              <Navbar
+              {/* <Navbar
                 setApiKey={setApiKey}
                 onOpen={onOpen}
                 logoText={'Muvi UI'}
                 brandText={getActiveRoute(routes, pathname)}
                 secondary={getActiveNavbar(routes, pathname)}
-              />
+              /> */}
             </Box>
           </Portal>
           <Box

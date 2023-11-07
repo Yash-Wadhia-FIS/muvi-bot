@@ -39,8 +39,6 @@ const ChatInner: FC<Props> = ({ isDrawer = false, innerMessages = [] }) => {
     setYoutubeLinks(links);
   }, [messages, innerMessages]);
 
-  console.log('youtue links', youtubeLinks);
-
   const sendMessage = () => {
     const newMessage: MessageModel = {
       user: 2,
@@ -76,7 +74,6 @@ const ChatInner: FC<Props> = ({ isDrawer = false, innerMessages = [] }) => {
     const youtubeRegex = /(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/.+/;
     const isLink = youtubeRegex.test(text);
     const links = extractYouTubeLinks(text);
-    console.log('links', links)
 
     if (isLink) {
       // If the message contains a link, set link color to blue and rest of the text to white
@@ -91,8 +88,10 @@ const ChatInner: FC<Props> = ({ isDrawer = false, innerMessages = [] }) => {
       );
     } else {
       // If it's plain text, set color to white
-      return <Box p={3} maxW="80%" color="white" bg={bgColor}
-        borderRadius="lg">{text}</Box>;
+      return <Box p={3} maxW="100%" color="white" bg={bgColor}
+        borderRadius="lg">
+        <Text>{text}</Text>
+      </Box>;
     }
   };
 

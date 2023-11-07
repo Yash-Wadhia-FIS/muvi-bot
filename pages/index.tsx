@@ -112,12 +112,10 @@ export default function Chat(props: { apiKeyApp: any; }) {
     setInputCode(Event.target.value);
   };
 
-  console.log('messages', message);
-
   return (
     <Flex
       w="100%"
-      pt={{ base: '70px', md: '0px' }}
+      // pt={{ base: '70px', md: '0px' }}
       direction="column"
       position="relative"
     >
@@ -126,7 +124,7 @@ export default function Chat(props: { apiKeyApp: any; }) {
         direction="column"
         mx="auto"
         w={{ base: '100%', md: '100%', xl: '100%' }}
-        minH={{ base: '75vh', '2xl': '85vh' }}
+        minH={{ base: '77vh', '2xl': '93vh' }}
         maxW="1000px"
       >
         {/* Model Change */}
@@ -270,16 +268,6 @@ export default function Chat(props: { apiKeyApp: any; }) {
             Chatbot may produce inaccurate information
             about people, places, or facts.
           </Text>
-          {/* <Link href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes">
-            <Text
-              fontSize="xs"
-              color={textColor}
-              fontWeight="500"
-              textDecoration="underline"
-            >
-              ChatGPT May 12 Version
-            </Text>
-          </Link> */}
         </Flex>
       </Flex>
     </Flex>
